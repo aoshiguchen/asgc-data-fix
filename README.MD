@@ -28,7 +28,7 @@
 # 快速入门
 ### 1、安装
 ```
-npm install asgc-data-fix@1.0.0
+npm install asgc-data-fix@1.0.1
 ```
 
 ### 2、mysql数据修复示例
@@ -37,6 +37,14 @@ npm install asgc-data-fix@1.0.0
 ```
 {
 	"dev": {
+		"chat": {
+			"type": "mongo",
+			"host": "***",
+			"port": 27017,
+			"userName": "***",
+			"password": "***",
+			"database": "wechat"
+		},
 		"test1": {
 			"type": "mysql",
 			"host": "***",
@@ -45,7 +53,7 @@ npm install asgc-data-fix@1.0.0
 			"password": "***",
 			"database": "test1"
 		}
-	}
+	},
 }
 ```
 
