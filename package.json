@@ -1,0 +1,16 @@
+{
+  "name": "asgc-data-fix",
+  "version": "1.0.0",
+  "description": "asgc-data-fix",
+  "main": "src/index.js",
+  "scripts": {
+    
+  },
+  "keywords": ["node","nodejs","data-fix","datafix","asgc","aoshiguchen"],
+  "author": "aoshiguchen",
+  "license": "ISC",
+  "dependencies": { 
+    "mongodb": "3.5.6",
+    "mysql": "2.18.1"
+  }
+}
