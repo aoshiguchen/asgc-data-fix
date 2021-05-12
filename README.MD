@@ -28,7 +28,7 @@
 # 快速入门
 ### 1、安装
 ```
-npm install asgc-data-fix@1.0.3
+npm install asgc-data-fix@1.0.4
 ```
 
 ### 2、mysql数据修复示例
@@ -112,7 +112,7 @@ fix.startup('dev', ['test1', 'chat', async function(test1DB, chatDB){
 
 #### 2.3、执行结果示例
 ```
-load config finished. {"dev":{"chat":{"type":"mongo","host":"122.51.22.55","port":27017,"userName":"asgc","password":"KJlgFFGYG","database":"wechat"},"test1":{"type":"mysql","host":"122.51.22.55","port":3306,"userName":"asgc","password":"YHJIkloB@54dxC","database":"test1"}},"a":{"b":"hello"},"uat":{"chat":{"type":"mongo","url":"mongodb://asgc:KJlgFFGYG@122.51.22.55:27017/wechat"},"test1":{"type":"mysql","host":"122.51.22.55","port":3306,"userName":"asgc","password":"YHJIkloB@54dxC","database":"test1"}}}
+load config finished.
 load plugins finished. [ 'mongo', 'mysql' ]
 ======================脚本执行开始
 默认环境: dev

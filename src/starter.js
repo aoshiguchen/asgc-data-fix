@@ -72,7 +72,7 @@ class Starter {
 		}
 		this.config = readConfig(path);
 		this.isLoadConfig = true;
-		console.log('load config finished.', JSON.stringify(this.config));
+		console.log('load config finished.');
 		return this;
 	}
 	loadPlugin(path) {

@@ -1,6 +1,6 @@
 {
   "name": "asgc-data-fix",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "asgc-data-fix",
   "main": "src/index.js",
   "scripts": {
