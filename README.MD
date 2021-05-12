@@ -23,12 +23,12 @@
 ### 阅读须知
 - 所有示例程序均随框架一起发布，因此安装完成之后可直接阅读源码及附带的示例
 - 所有示例程序依赖的配置（如：数据库连接配置）文件已做脱敏处理，原配置文件不会发布。
-> 如：脚本依赖`config.json`文件，其中包含敏感信息，示例程序中只会包含`config1.json`文件，作为格式样板提供。因此示例程序无法直接运行，需要自行修改。
+> 如：脚本依赖`config.json`文件，其中敏感信息已做处理。示例程序中的`config.private.json`文件不会发布。因此示例程序无法直接运行，需要自行修改。
 
 # 快速入门
 ### 1、安装
 ```
-npm install asgc-data-fix@1.0.1
+npm install asgc-data-fix@1.0.3
 ```
 
 ### 2、mysql数据修复示例
@@ -112,6 +112,7 @@ fix.startup('dev', ['test1', 'chat', async function(test1DB, chatDB){
 
 #### 2.3、执行结果示例
 ```
+load config finished. {"dev":{"chat":{"type":"mongo","host":"122.51.22.55","port":27017,"userName":"asgc","password":"KJlgFFGYG","database":"wechat"},"test1":{"type":"mysql","host":"122.51.22.55","port":3306,"userName":"asgc","password":"YHJIkloB@54dxC","database":"test1"}},"a":{"b":"hello"},"uat":{"chat":{"type":"mongo","url":"mongodb://asgc:KJlgFFGYG@122.51.22.55:27017/wechat"},"test1":{"type":"mysql","host":"122.51.22.55","port":3306,"userName":"asgc","password":"YHJIkloB@54dxC","database":"test1"}}}
 load plugins finished. [ 'mongo', 'mysql' ]
 ======================脚本执行开始
 默认环境: dev
@@ -163,13 +164,15 @@ weChatInfoList [
 ##### 1.1、配置文件格式
 > 如下所示：配置文件采用json格式
 - dev、uat代表环境，可根据需要自行定义，当脚本在dev环境执行时，将取dev节点下面的配置
-- test1、chat代表服务别名
+- test1、chat代表服务实例别名
 - type，目前asgc-data-fix内置插件只包含mysql与mongo，type为mysql代表test1为mysql连接实例。若自定义插件，type可设置为自定义插件名
 - 其他，除了type以外其他参数由插件自己定义，如下数据库连接参数是内置插件所需要的。若自定义插件，可根据需要定义相关配置项
 
 ```
 {
+	// 环境配置
 	"dev": {
+		// 实例配置
 		"test1": {
 			"type": "mysql",
 			"host": "***",
@@ -193,9 +196,10 @@ weChatInfoList [
 }
 ```
 ##### 1.2、配置文件加载机制
-- `fix.loadConfig()`可指定配置文件路径进行加载，需要在`fix.startup()`执行之前
-- 默认情况下，若不主动调用`fix.loadConfig()`加载配置，直接`fix.startup()`启动脚本时，会自动加载脚本同级别目录下`config.json`文件，之后再执行脚本
-- 配置文件多次加载，以最后一次加载的配置为准
+- `fix.loadConfig()`可指定配置文件路径进行加载，需要在`fix.startup()`执行之前，支持相对路径和绝对路径
+- `fix.loadConfig()`传入路径可以不包含文件扩展名`.json`。当不包含扩展名时（如: `myconfig`），会先加载`myconfig.json`文件，然后加载`myconfig.private.json`文件，且优先使用后者的实例配置
+- 默认情况下，若不主动调用`fix.loadConfig()`加载配置，直接`fix.startup()`启动脚本时，相当于调了	`fix.loadConfig('config').startup()`，之后再执行脚本
+- 多次调用`fix.loadConfig()`，以最后一次加载的配置为准。
 
 ### 2、指定所在环境
 - `startup`方法第一个参数传入一个字符串，可作为脚本默认执行环境

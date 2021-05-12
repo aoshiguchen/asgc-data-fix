@@ -1,6 +1,7 @@
 let fix = require('../../src');
 
-fix.startup('dev', ['test1', 'chat', async function(test1DB, chatDB){
+fix
+.startup('dev', ['test1', 'chat', async function(test1DB, chatDB){
 
 	console.log('==========================mysql操作示例==========================');
 	// 新增

@@ -4,6 +4,61 @@ let fs = require("fs");
 
 let logInfo = "======================";
 
+function readFile(path) {
+	let result = {};
+	try{
+		result = require(`${process.cwd()}/${path}`);
+	}catch(e1){
+		try{
+			result = require(`${path}`);
+		}catch(e2){
+			return null;
+		}
+	}
+	return result;
+}
+
+/**
+ * 读取配置
+ * 1、支持相对于脚本当前路径、绝对路径
+ * 2、若文件名带.json后缀，则直接加载该文件
+ * 3、若文件名不带.json后缀，如：/config，先加载/config.json，再加载/config.private.json，且后者可覆盖前者
+ * 4、文件不存在，则直接报错
+ */
+function readConfig(path) {
+	let result = {};
+	if (path.endsWith('.json')) {
+		result = readFile(path);
+		if (null == result) {
+			throw new Error(`配置文件'${path}'不存在或格式有误!`);
+		}
+		return result;
+	}
+
+	let config = readFile(`${path}.json`);
+	let privateConfig = readFile(`${path}.private.json`);
+	if (null == config && null == privateConfig) {
+		throw new Error(`配置文件'${path}'不存在或格式有误!`);
+	}
+	if (null == config) {
+		return privateConfig;
+	}
+	result = config;
+	if (null != privateConfig) {
+		for (let env in privateConfig) {
+			if (!result[env]) {
+				result[env] = privateConfig[env];
+			} else {
+				for (let svr in privateConfig[env]) {
+					result[env][svr] = privateConfig[env][svr];
+				}
+			}
+			
+		}
+	}
+	return result;
+}
+
 class Starter {
 	constructor() {
 		this.config = {};
@@ -15,16 +70,9 @@ class Starter {
 		if (!types.isString(path)) {
 			throw new Error(`path:${path}不是一个字符串!`);
 		}
-		let _path = `${process.cwd()}/${path}`;
-		if (!fs.existsSync(_path)) {
-			throw new Error(`配置文件'${path}'不存在!`);
-		}
-		try{
-			this.config = require(_path);
-		}catch(e){
-			throw new Error(`配置文件'${path}'格式有误!`);
-		}
+		this.config = readConfig(path);
 		this.isLoadConfig = true;
+		console.log('load config finished.', JSON.stringify(this.config));
 		return this;
 	}
 	loadPlugin(path) {
@@ -59,7 +107,7 @@ class Starter {
 	}
 	startup(env, args) {
 		if (!this.isLoadConfig) {
-			this.loadConfig('config.json');
+			this.loadConfig('config');
 		}
 		this.loadPlugin(`${__dirname}/plugins`);
 		this.loadPlugin(`${process.cwd()}/plugins`);
